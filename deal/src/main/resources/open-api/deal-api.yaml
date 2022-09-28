@@ -8,7 +8,7 @@ paths:
   /deal/application:
     post:
       summary: Calculation of possible loan offers
-      operationId: listOfPossibleLoanOffers
+      operationId: getListOfPossibleLoanOffers
       requestBody:
         content:
           application/json:
@@ -26,7 +26,7 @@ paths:
   /deal/offer:
     put:
       summary: Offer selection
-      operationId: loanOffer
+      operationId: choiceLoanOffer
       requestBody:
         content:
           application/json:
@@ -40,7 +40,7 @@ paths:
       - $ref: '#/components/parameters/ApplicationId'
     put:
       summary: Full credit calculation
-      operationId: loanParameters
+      operationId: calculatedLoanParameters
       requestBody:
         content:
           application/json:

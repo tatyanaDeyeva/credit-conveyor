@@ -33,9 +33,9 @@ public class Credit {
     @Type(type = "jsonb")
     private List<PaymentScheduleElement> paymentSchedule;
     @Column(name = "is_insurance_enabled")
-    private Boolean isInsuranceEnabled = false;
+    private Boolean isInsuranceEnabled;
     @Column(name = "is_salary_client")
-    private Boolean isSalaryClient = false;
+    private Boolean isSalaryClient;
     @Column(name = "credit_status")
     @Enumerated(EnumType.STRING)
     private CreditStatus creditStatus;

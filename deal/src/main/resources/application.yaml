@@ -8,7 +8,6 @@ spring:
     hibernate:
       ddl-auto: validate
 
-
 msa:
   services:
     conveyor:

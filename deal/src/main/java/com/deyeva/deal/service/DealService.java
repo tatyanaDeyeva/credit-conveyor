@@ -10,6 +10,7 @@ import com.deyeva.deal.repository.ClientRepository;
 import com.deyeva.deal.repository.CreditRepository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +73,7 @@ public class DealService {
         application.setStatus(ApplicationStatus.PREAPPROVAL);
         application.setAppliedOffer(loanOfferDTO);
         application.setStatusHistory(statusHistory);
+        application.setCreationDate(LocalDateTime.now());
 
         applicationRepository.save(application);
     }
@@ -108,7 +110,7 @@ public class DealService {
         credit.setPsk(creditDTO.getPsk());
         credit.setPaymentSchedule(creditDTO.getPaymentSchedule());
         credit.setIsInsuranceEnabled(creditDTO.getIsInsuranceEnabled());
-        credit.setIsSalaryClient(credit.getIsSalaryClient());
+        credit.setIsSalaryClient(creditDTO.getIsSalaryClient());
         credit.setCreditStatus(CreditStatus.CALCULATED);
 
         creditRepository.save(credit);
@@ -119,8 +121,23 @@ public class DealService {
         applicationStatusHistoryDTO.setTime(LocalDateTime.now());
         applicationStatusHistoryDTO.setChangeType(ApplicationStatus.PREAPPROVAL);
 
+        Employment employment = new Employment();
+        employment.setEmploymentStatus(EmploymentStatus.valueOf(finishRegistrationRequestDTO.getEmployment().getEmploymentStatus().getValue()));
+        employment.setEmployerInn(finishRegistrationRequestDTO.getEmployment().getEmployerINN());
+        employment.setSalary(finishRegistrationRequestDTO.getEmployment().getSalary());
+        employment.setPosition(Position.valueOf(finishRegistrationRequestDTO.getEmployment().getPosition().getValue()));
+        employment.setWorkExperienceTotal(finishRegistrationRequestDTO.getEmployment().getWorkExperienceTotal());
+        employment.setWorkExperienceCurrent(finishRegistrationRequestDTO.getEmployment().getWorkExperienceCurrent());
+
         application.setStatus(ApplicationStatus.APPROVED);
         application.getStatusHistory().add(applicationStatusHistoryDTO);
+        application.getClient().setGender(finishRegistrationRequestDTO.getGender());
+        application.getClient().setMaritalStatus(MaritalStatus.valueOf(finishRegistrationRequestDTO.getMaritalStatus().getValue()));
+        application.getClient().setDependentAmount(finishRegistrationRequestDTO.getDependentAmount());
+        application.getClient().setEmployment(employment);
+        application.getClient().setAccount(finishRegistrationRequestDTO.getAccount());
+
+
 
         applicationRepository.save(application);
     }

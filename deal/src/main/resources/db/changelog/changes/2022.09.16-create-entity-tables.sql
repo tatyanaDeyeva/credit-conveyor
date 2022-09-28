@@ -34,13 +34,19 @@ create table if not exists credit
 create table if not exists application
 (
     id             bigserial primary key,
-    client_id      bigserial references client (id),
-    credit_id      bigserial references credit (id),
+    client_id      bigint,
+    credit_id      bigint,
     status         varchar,
     creation_date  timestamp,
     applied_offer  jsonb,
     sign_date      date,
     ses_code       varchar,
-    status_history jsonb
+    status_history jsonb,
+    constraint fk_client
+        foreign key (client_id)
+            references client(id),
+    constraint fk_credit
+        foreign key (credit_id)
+            references credit(id)
 );
 

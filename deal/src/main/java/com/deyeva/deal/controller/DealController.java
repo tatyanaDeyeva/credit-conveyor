@@ -19,7 +19,7 @@ public class DealController implements DealApi {
         this.dealService = dealService;
     }
 
-    public ResponseEntity<List<LoanOfferDTO>> listOfPossibleLoanOffers(LoanApplicationRequestDTO loanApplicationRequestDTO) {
+    public ResponseEntity<List<LoanOfferDTO>> getListOfPossibleLoanOffers(LoanApplicationRequestDTO loanApplicationRequestDTO) {
         return ResponseEntity.ok(dealService.getListOfPossibleLoanOffers(loanApplicationRequestDTO));
     }
 
