@@ -20,16 +20,16 @@ public class DealController implements DealApi {
     }
 
     public ResponseEntity<List<LoanOfferDTO>> listOfPossibleLoanOffers(LoanApplicationRequestDTO loanApplicationRequestDTO) {
-        return ResponseEntity.ok(dealService.listOfPossibleLoanOffers(loanApplicationRequestDTO));
+        return ResponseEntity.ok(dealService.getListOfPossibleLoanOffers(loanApplicationRequestDTO));
     }
 
-    public ResponseEntity<Void> loanOffer(LoanOfferDTO loanOfferDTO){
-        dealService.loanOffer(loanOfferDTO);
+    public ResponseEntity<Void> choiceLoanOffer(LoanOfferDTO loanOfferDTO){
+        dealService.choiceLoanOffer(loanOfferDTO);
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Void> loanParameters(Long applicationId, FinishRegistrationRequestDTO finishRegistrationRequestDTO){
-        dealService.loanParameters(applicationId, finishRegistrationRequestDTO);
+    public ResponseEntity<Void> calculatedLoanParameters(Long applicationId, FinishRegistrationRequestDTO finishRegistrationRequestDTO){
+        dealService.calculatedLoanParameters(applicationId, finishRegistrationRequestDTO);
         return ResponseEntity.ok().build();
     }
 }

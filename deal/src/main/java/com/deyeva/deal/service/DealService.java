@@ -29,7 +29,7 @@ public class DealService {
         this.creditConveyorClient = creditConveyorClient;
     }
 
-    public List<LoanOfferDTO> listOfPossibleLoanOffers(LoanApplicationRequestDTO loanApplicationRequestDTO) {
+    public List<LoanOfferDTO> getListOfPossibleLoanOffers(LoanApplicationRequestDTO loanApplicationRequestDTO) {
         Client client = new Client();
 
         Passport passport = new Passport();
@@ -45,12 +45,8 @@ public class DealService {
 
         clientRepository.save(client);
 
-        Credit credit = new Credit();
-        creditRepository.save(credit);
-
         Application application = new Application();
         application.setClient(client);
-        application.setCredit(credit);
 
         applicationRepository.save(application);
 
@@ -63,8 +59,8 @@ public class DealService {
         return loanOffers;
     }
 
-    public void loanOffer(LoanOfferDTO loanOfferDTO) {
-        Application application = applicationRepository.getReferenceById(loanOfferDTO.getApplicationId());
+    public void choiceLoanOffer(LoanOfferDTO loanOfferDTO) {
+        Application application = applicationRepository.findById(loanOfferDTO.getApplicationId()).get();
 
         ApplicationStatusHistoryDTO applicationStatusHistoryDTO = new ApplicationStatusHistoryDTO();
         applicationStatusHistoryDTO.setStatus(ApplicationStatus.PREAPPROVAL);
@@ -80,8 +76,8 @@ public class DealService {
         applicationRepository.save(application);
     }
 
-    public void loanParameters(Long applicationId, FinishRegistrationRequestDTO finishRegistrationRequestDTO){
-        Application application = applicationRepository.getReferenceById(applicationId);
+    public void calculatedLoanParameters(Long applicationId, FinishRegistrationRequestDTO finishRegistrationRequestDTO){
+        Application application = applicationRepository.findById(applicationId).get();
 
         ScoringDataDTO scoringDataDTO = new ScoringDataDTO()
                 .amount(application.getAppliedOffer().getRequestedAmount())
@@ -104,17 +100,18 @@ public class DealService {
 
         CreditDTO creditDTO = creditConveyorClient.getLoanOffer(scoringDataDTO);
 
-        Credit credit = application.getCredit();
+        Credit credit = new Credit();
         credit.setAmount(creditDTO.getAmount());
         credit.setTerm(creditDTO.getTerm());
-        credit.setMonthly_payment(creditDTO.getMonthlyPayment());
+        credit.setMonthlyPayment(creditDTO.getMonthlyPayment());
         credit.setRate(creditDTO.getRate());
         credit.setPsk(creditDTO.getPsk());
-        credit.setPayment_schedule(creditDTO.getPaymentSchedule());
-        credit.setIs_insurance_enabled(creditDTO.getIsInsuranceEnabled());
-        credit.setIs_salary_client(credit.getIs_salary_client());
-        credit.setCredit_status(CreditStatus.CALCULATED);
+        credit.setPaymentSchedule(creditDTO.getPaymentSchedule());
+        credit.setIsInsuranceEnabled(creditDTO.getIsInsuranceEnabled());
+        credit.setIsSalaryClient(credit.getIsSalaryClient());
+        credit.setCreditStatus(CreditStatus.CALCULATED);
 
+        creditRepository.save(credit);
         application.setCredit(credit);
 
         ApplicationStatusHistoryDTO applicationStatusHistoryDTO = new ApplicationStatusHistoryDTO();

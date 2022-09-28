@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -82,7 +83,7 @@ class DealControllerTest extends AbstractControllerTest{
         loanOffers.add(thirdOffer);
         loanOffers.add(fourthOffer);
 
-        when(dealService.listOfPossibleLoanOffers(loanApplicationRequestDTO)).thenReturn(loanOffers);
+        when(dealService.getListOfPossibleLoanOffers(loanApplicationRequestDTO)).thenReturn(loanOffers);
 
         String request = asJsonString(loanApplicationRequestDTO);
 
@@ -105,6 +106,8 @@ class DealControllerTest extends AbstractControllerTest{
                 .rate(BigDecimal.valueOf(8))
                 .isInsuranceEnabled(false)
                 .isSalaryClient(false);
+
+        doNothing().when(dealService).choiceLoanOffer(loanOfferDTO);
 
         String request = asJsonString(loanOfferDTO);
 
@@ -136,6 +139,8 @@ class DealControllerTest extends AbstractControllerTest{
         employment.setWorkExperienceCurrent(5);
 
         finishRegistrationRequestDTO.setEmployment(employment);
+
+        doNothing().when(dealService).calculatedLoanParameters(1L, finishRegistrationRequestDTO);
 
         String request = asJsonString(finishRegistrationRequestDTO);
 

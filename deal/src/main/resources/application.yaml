@@ -7,3 +7,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+
+
+msa:
+  services:
+    conveyor:
+      url: http://localhost:8080

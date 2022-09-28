@@ -24,19 +24,19 @@ public class Credit {
     @Column(name = "term")
     private Integer term;
     @Column(name = "monthly_payment")
-    private BigDecimal monthly_payment;
+    private BigDecimal monthlyPayment;
     @Column(name = "rate")
     private BigDecimal rate;
     @Column(name = "psk")
     private BigDecimal psk;
     @Column(name = "payment_schedule")
     @Type(type = "jsonb")
-    private List<PaymentScheduleElement> payment_schedule;
+    private List<PaymentScheduleElement> paymentSchedule;
     @Column(name = "is_insurance_enabled")
-    private Boolean is_insurance_enabled = false;
+    private Boolean isInsuranceEnabled = false;
     @Column(name = "is_salary_client")
-    private Boolean is_salary_client = false;
+    private Boolean isSalaryClient = false;
     @Column(name = "credit_status")
     @Enumerated(EnumType.STRING)
-    private CreditStatus credit_status;
+    private CreditStatus creditStatus;
 }

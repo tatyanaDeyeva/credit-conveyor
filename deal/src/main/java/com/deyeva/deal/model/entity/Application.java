@@ -24,8 +24,8 @@ public class Application {
     @OneToOne
     @JoinColumn(name = "client_id")
     private Client client;
-    @OneToOne
-    @JoinColumn(name = "credit_id")
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "credit_id", referencedColumnName = "id")
     private Credit credit;
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
