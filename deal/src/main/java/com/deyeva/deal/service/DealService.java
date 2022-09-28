@@ -10,6 +10,7 @@ import com.deyeva.deal.repository.ClientRepository;
 import com.deyeva.deal.repository.CreditRepository;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -61,7 +62,8 @@ public class DealService {
     }
 
     public void choiceLoanOffer(LoanOfferDTO loanOfferDTO) {
-        Application application = applicationRepository.findById(loanOfferDTO.getApplicationId()).get();
+        Application application = applicationRepository.findById(loanOfferDTO.getApplicationId())
+           .orElseThrow(() -> new EntityNotFoundException("Application with id = "+ loanOfferDTO.getApplicationId()+" not found."));
 
         ApplicationStatusHistoryDTO applicationStatusHistoryDTO = new ApplicationStatusHistoryDTO();
         applicationStatusHistoryDTO.setStatus(ApplicationStatus.PREAPPROVAL);
@@ -79,7 +81,8 @@ public class DealService {
     }
 
     public void calculatedLoanParameters(Long applicationId, FinishRegistrationRequestDTO finishRegistrationRequestDTO){
-        Application application = applicationRepository.findById(applicationId).get();
+        Application application = applicationRepository.findById(applicationId)
+                .orElseThrow(() -> new EntityNotFoundException("Application with id = "+ applicationId +" not found."));
 
         ScoringDataDTO scoringDataDTO = new ScoringDataDTO()
                 .amount(application.getAppliedOffer().getRequestedAmount())
