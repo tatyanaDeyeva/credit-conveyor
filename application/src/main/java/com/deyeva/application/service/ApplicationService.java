@@ -4,7 +4,6 @@ import com.deyeva.application.exception.RefusalException;
 import com.deyeva.application.feign.DealClient;
 import com.deyeva.application.model.LoanApplicationRequestDTO;
 import com.deyeva.application.model.LoanOfferDTO;
-import org.springframework.format.datetime.DateFormatter;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -29,7 +28,7 @@ public class ApplicationService {
     }
 
     public List<LoanOfferDTO> getListOfPossibleLoanOffers(LoanApplicationRequestDTO loanApplicationRequestDTO) {
-        checkinForPrescoring(loanApplicationRequestDTO);
+        doPrescoring(loanApplicationRequestDTO);
         return dealClient.getOffers(loanApplicationRequestDTO);
     }
 
@@ -37,13 +36,13 @@ public class ApplicationService {
         dealClient.getLoanOffer(loanOfferDTO);
     }
 
-    public void checkinForPrescoring(LoanApplicationRequestDTO loanApplicationRequestDTO) {
+    public void doPrescoring(LoanApplicationRequestDTO loanApplicationRequestDTO) {
         List<String> refuseNotes = new ArrayList<>();
 
         Pattern patternForTerm = Pattern.compile("\\d{1,2}");
         Pattern patternForName = Pattern.compile("[а-яА-Я]{2,30}");
         Pattern patternForEmail = Pattern.compile("[\\w\\.]{2,50}@[\\w\\.]{2,20}");
-        Pattern patternForBD = Pattern.compile("/^[0-9]{4}-[0-1][0-9]-[0-3][0-9]$/");
+        Pattern patternForBirthdate = Pattern.compile("\\d{4}-[01]\\d-[0123]\\d");
         Pattern patternForPasSeries = Pattern.compile("\\d{4}");
         Pattern patternForPasNumber = Pattern.compile("\\d{6}");
 
@@ -56,19 +55,24 @@ public class ApplicationService {
             refuseNotes.add("The loan term is insufficient");
         }
 
-        if (!patternForName.matcher(loanApplicationRequestDTO.getFirstName()).matches() ||
-                !patternForName.matcher(loanApplicationRequestDTO.getLastName()).matches()) {
-            if(loanApplicationRequestDTO.getMiddleName() != null &&
-                    !patternForName.matcher(loanApplicationRequestDTO.getMiddleName()).matches()) {
-                refuseNotes.add("Invalid Middle Name");
-            } else {
-                refuseNotes.add("Invalid name");
-            }
+        if (!patternForName.matcher(loanApplicationRequestDTO.getFirstName()).matches()) {
+            refuseNotes.add("Invalid first name");
         }
 
-//        if (!patternForBD.matcher(loanApplicationRequestDTO.getBirthdate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))).matches()) {
-//            refuseNotes.add("Invalid birthdate");
-//        }
+        if (!patternForName.matcher(loanApplicationRequestDTO.getLastName()).matches()) {
+            refuseNotes.add("Invalid last name");
+        }
+
+        if (!loanApplicationRequestDTO.getMiddleName().isEmpty() &&
+                !patternForName.matcher(loanApplicationRequestDTO.getMiddleName()).matches()) {
+            refuseNotes.add("Invalid middle name");
+        }
+
+        if (!patternForBirthdate
+                .matcher(loanApplicationRequestDTO.getBirthdate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .matches()) {
+            refuseNotes.add("Invalid birthdate");
+        }
 
         if (MIN_AGE > ChronoUnit.YEARS.between(loanApplicationRequestDTO.getBirthdate(), LocalDate.now())) {
             refuseNotes.add("Age restrictions for issuing a loan");
