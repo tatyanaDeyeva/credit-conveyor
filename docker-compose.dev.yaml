@@ -1,0 +1,21 @@
+version: '3.8' #версия docker-compose
+services: #блок описания контейнеров (сервисов)
+  zookeeper: #название сервиса
+    container_name: zookeeper #имя контейнера
+    image: wurstmeister/zookeeper #название docker-образа, которое будет использоваться как ядро контейнера
+  #  build: api/ #путь до файла Dockerfile от текущей директории(в которой лежит docker-compose file), который говорит как докеру билдить образ
+    expose:
+      - 2181
+  kafka:
+    image: wurstmeister/kafka
+    container_name: kafka
+    expose:
+      - 9092
+    ports: #порты, которые будет использовать контейнер. HOST:CONTAINER. Первый порт тот, что будет прокинут на локальную машину, второй тот, который будет внутри контейнера.
+      - "9092:9092"
+    depends_on: #указывает контейнер, который должен быть поднят перед  текущим
+      - zookeeper
+    environment: #необходимые переменные среды (для spring можно таким образом устанавливать переменные для application.yaml, в UPPER_CASE)
+      KAFKA_ADVERTISED_HOST_NAME: localhost
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "finish-registration:1:1,create-documents:1:1,send-documents:1:1,send-ses:1:1,credit-issued:1:1,application-denied:1:1"

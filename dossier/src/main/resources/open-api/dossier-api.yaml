@@ -1,113 +1,14 @@
 openapi: "3.0.0"
 info:
   version: '1'
-  title: Credit conveyor API
+  title: Dossier API
 servers:
-  - url: http://localhost:8081
+  - url: http://localhost:9092
+
 paths:
-  /deal/application:
-    post:
-      summary: Calculation of possible loan offers
-      operationId: getListOfPossibleLoanOffers
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/LoanApplicationRequestDTO'
-      responses:
-        200:
-          description: Possible loan terms
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/LoanOfferDTO'
-  /deal/offer:
-    put:
-      summary: Offer selection
-      operationId: choiceLoanOffer
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/LoanOfferDTO'
-      responses:
-        200:
-          description: Offer selected
-  /deal/calculate/{applicationId}:
-    parameters:
-      - $ref: '#/components/parameters/ApplicationId'
-    put:
-      summary: Full credit calculation
-      operationId: calculatedLoanParameters
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/FinishRegistrationRequestDTO'
-      responses:
-        200:
-          description: Loan terms
-
-  /deal/document/sendMessage/test:
-    post:
-      summary: Request to send message
-      operationId: toSendMessage
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/EmailMessage'
-      responses:
-        200:
-          description: Request sent
-
-  /deal/document/{applicationId}/send:
-    parameters:
-      - $ref: '#/components/parameters/ApplicationId'
-    post:
-      summary: Request to send documents
-      operationId: toSendDocuments
-      responses:
-        200:
-          description: Request sent
-
-  /deal/document/{applicationId}/sign:
-    parameters:
-      - $ref: '#/components/parameters/ApplicationId'
-    post:
-      summary: Request to sign documents
-      operationId: toSignDocuments
-      responses:
-        200:
-          description: Request sent
-
-  /deal/document/{applicationId}/code:
-    parameters:
-      - $ref: '#/components/parameters/ApplicationId'
-    post:
-      summary: Signing of documents
-      operationId: toSendCode
-      requestBody:
-        content:
-          text/plain:
-            schema:
-              type: string
-      responses:
-        200:
-          description: Documents signed
+  {}
 
 components:
-  parameters:
-    ApplicationId:
-      name: applicationId
-      in: path
-      required: true
-      schema:
-        type: integer
-        format: int64
-
   schemas:
     LoanApplicationRequestDTO:
       type: object
@@ -415,7 +316,12 @@ components:
         - account
       properties:
         gender:
-          $ref: '#/components/schemas/ScoringDataDTO/gender'
+          type: string
+          enum:
+            - 'MALE'
+            - 'FEMALE'
+            - 'NON_BINARY'
+          example: 'MALE'
         maritalStatus:
           type: string
           enum:
@@ -456,9 +362,9 @@ components:
             - FINISH-REGISTRATION
             - CREATE-DOCUMENTS
             - SEND-DOCUMENTS
-            - SEND-SES
             - CREDIT-ISSUED
             - APPLICATION-DENIED
+            - SEND-SES
           example: SEND-DOCUMENTS
         applicationId:
           type: integer
