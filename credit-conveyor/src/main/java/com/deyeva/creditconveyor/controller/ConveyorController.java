@@ -6,19 +6,17 @@ import com.deyeva.creditconveyor.model.LoanApplicationRequestDTO;
 import com.deyeva.creditconveyor.model.LoanOfferDTO;
 import com.deyeva.creditconveyor.model.ScoringDataDTO;
 import com.deyeva.creditconveyor.service.ConveyorService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
+@AllArgsConstructor
 public class ConveyorController implements ConveyorApi {
 
     private final ConveyorService conveyorService;
-
-    public ConveyorController(ConveyorService conveyorService) {
-        this.conveyorService = conveyorService;
-    }
 
     @Override
     public ResponseEntity<List<LoanOfferDTO>> listOfPossibleLoanOffers(LoanApplicationRequestDTO loanApplicationRequestDTO) {

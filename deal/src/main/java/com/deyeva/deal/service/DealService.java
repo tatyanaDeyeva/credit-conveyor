@@ -9,6 +9,8 @@ import com.deyeva.deal.model.entity.Credit;
 import com.deyeva.deal.repository.ApplicationRepository;
 import com.deyeva.deal.repository.ClientRepository;
 import com.deyeva.deal.repository.CreditRepository;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -18,6 +20,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
+@Slf4j
 public class DealService {
     private final ApplicationRepository applicationRepository;
     private final ClientRepository clientRepository;
@@ -25,13 +29,8 @@ public class DealService {
     private final CreditConveyorClient creditConveyorClient;
     private final KafkaSender kafkaSender;
 
-    public DealService(ApplicationRepository applicationRepository, ClientRepository clientRepository, CreditRepository creditRepository, CreditConveyorClient creditConveyorClient, KafkaSender kafkaSender) {
-        this.applicationRepository = applicationRepository;
-        this.clientRepository = clientRepository;
-        this.creditRepository = creditRepository;
-        this.creditConveyorClient = creditConveyorClient;
-        this.kafkaSender = kafkaSender;
-    }
+    private final int MIN_INT_FOR_RANDOM_NUMBER = 999;
+    private final int MAX_INT_FOR_RANDOM_NUMBER = 9999;
 
     public List<LoanOfferDTO> getListOfPossibleLoanOffers(LoanApplicationRequestDTO loanApplicationRequestDTO) {
         Client client = new Client();
@@ -68,6 +67,7 @@ public class DealService {
         
         try {
             loanOffers = creditConveyorClient.getOffers(loanApplicationRequestDTO);
+            log.info("Possible loan terms are calculated.");
         } catch (RuntimeException e) {
             EmailMessage emailMessage = new EmailMessage();
             emailMessage.setApplicationId(application.getId());
@@ -94,7 +94,12 @@ public class DealService {
         applicationStatusHistoryDTO.setChangeType(ApplicationStatus.PREAPPROVAL);
 
         List<ApplicationStatusHistoryDTO> statusHistory = application.getStatusHistory();
-        statusHistory.add(applicationStatusHistoryDTO);
+        if (statusHistory.contains(ApplicationStatus.PREAPPROVAL)){
+            statusHistory.add(applicationStatusHistoryDTO);
+        } else {
+            log.info("The transition to this status is incorrect.");
+        }
+
 
         application.setStatus(ApplicationStatus.APPROVED);
         application.setAppliedOffer(loanOfferDTO);
@@ -107,6 +112,7 @@ public class DealService {
         emailMessage.setAddress(application.getClient().getEmail());
 
         kafkaSender.sendMessage(emailMessage.getTheme(), emailMessage);
+        log.info("Application saved in database.");
 
         applicationRepository.save(application);
     }
@@ -135,6 +141,7 @@ public class DealService {
                 .isSalaryClient(application.getAppliedOffer().getIsSalaryClient());
 
         CreditDTO creditDTO = creditConveyorClient.getLoanOffer(scoringDataDTO);
+        log.info("The loan is calculated.");
 
         Credit credit = new Credit();
         credit.setAmount(creditDTO.getAmount());
@@ -155,6 +162,13 @@ public class DealService {
         applicationStatusHistoryDTO.setTime(LocalDateTime.now());
         applicationStatusHistoryDTO.setChangeType(ApplicationStatus.APPROVED);
 
+        List<ApplicationStatusHistoryDTO> statusHistory = application.getStatusHistory();
+        if (statusHistory.contains(ApplicationStatus.APPROVED)){
+            statusHistory.add(applicationStatusHistoryDTO);
+        } else {
+            log.info("The transition to this status is incorrect.");
+        }
+
         Employment employment = new Employment();
         employment.setEmploymentStatus(EmploymentStatus.valueOf(finishRegistrationRequestDTO.getEmployment().getEmploymentStatus().getValue()));
         employment.setEmployerInn(finishRegistrationRequestDTO.getEmployment().getEmployerINN());
@@ -164,16 +178,14 @@ public class DealService {
         employment.setWorkExperienceCurrent(finishRegistrationRequestDTO.getEmployment().getWorkExperienceCurrent());
 
         application.setStatus(ApplicationStatus.CC_APPROVED);
-        application.getStatusHistory().add(applicationStatusHistoryDTO);
+        application.setStatusHistory(statusHistory);
         application.getClient().setGender(finishRegistrationRequestDTO.getGender());
         application.getClient().setMaritalStatus(MaritalStatus.valueOf(finishRegistrationRequestDTO.getMaritalStatus().getValue()));
         application.getClient().setDependentAmount(finishRegistrationRequestDTO.getDependentAmount());
         application.getClient().setEmployment(employment);
         application.getClient().setAccount(finishRegistrationRequestDTO.getAccount());
 
-        int a = 999;
-        int b = 9999;
-        int random_number = a + (int)(Math.random() * ((b - a) + 1));
+        int random_number = MIN_INT_FOR_RANDOM_NUMBER + (int)(Math.random() * ((MAX_INT_FOR_RANDOM_NUMBER - MIN_INT_FOR_RANDOM_NUMBER) + 1));
         application.setSesCode(String.valueOf(random_number));
 
         EmailMessage emailMessage = new EmailMessage();
@@ -197,7 +209,13 @@ public class DealService {
 
         List<ApplicationStatusHistoryDTO> statusHistory = application.getStatusHistory();
         statusHistory.add(applicationStatusHistoryDTO);
-        application.setStatusHistory(statusHistory);
+
+        if (statusHistory.contains(ApplicationStatus.CC_APPROVED)){
+            application.setStatusHistory(statusHistory);
+        } else {
+            log.info("The transition to this status is incorrect.");
+        }
+
         application.setStatus(ApplicationStatus.PREAPPROVAL);
 
         applicationRepository.save(application);
@@ -208,6 +226,7 @@ public class DealService {
         emailMessage.setAddress(application.getClient().getEmail());
 
         kafkaSender.sendMessage(emailMessage.getTheme(), emailMessage);
+        log.info("Notification for filling in the data has been sent.");
 
         ApplicationStatusHistoryDTO applicationStatusHistoryDTOSecond = new ApplicationStatusHistoryDTO();
         applicationStatusHistoryDTOSecond.setStatus(ApplicationStatus.DOCUMENT_CREATED);
@@ -216,7 +235,13 @@ public class DealService {
 
         List<ApplicationStatusHistoryDTO> statusHistorySecond = application.getStatusHistory();
         statusHistorySecond.add(applicationStatusHistoryDTOSecond);
-        application.setStatusHistory(statusHistorySecond);
+
+        if (statusHistorySecond.contains(ApplicationStatus.PREPARE_DOCUMENTS)) {
+            application.setStatusHistory(statusHistorySecond);
+        } else {
+            log.info("The transition to this status is incorrect.");
+        }
+
         application.setStatus(ApplicationStatus.DOCUMENT_CREATED);
     }
 
@@ -230,6 +255,7 @@ public class DealService {
         emailMessage.setAddress(application.getClient().getEmail());
 
         kafkaSender.sendMessage(emailMessage.getTheme(), emailMessage);
+        log.info("The notification for signing the documents has been sent.");
     }
 
     public void toSendCode(Long applicationId, String code) {
@@ -246,18 +272,30 @@ public class DealService {
             applicationStatusHistoryDTOSecond.setTime(LocalDateTime.now());
             applicationStatusHistoryDTOSecond.setChangeType(ApplicationStatus.DOCUMENT_CREATED);
 
-            List<ApplicationStatusHistoryDTO> statusHistorySecond = application.getStatusHistory();
-            statusHistorySecond.add(applicationStatusHistoryDTOSecond);
-            application.setStatusHistory(statusHistorySecond);
+            List<ApplicationStatusHistoryDTO> statusHistory = application.getStatusHistory();
+            statusHistory.add(applicationStatusHistoryDTOSecond);
+
+            if (statusHistory.contains(ApplicationStatus.DOCUMENT_CREATED)){
+                application.setStatusHistory(statusHistory);
+            } else {
+                log.info("The transition to this status is incorrect.");
+            }
+
             application.setStatus(ApplicationStatus.DOCUMENT_SIGNED);
 
             emailMessage.setTheme(EmailMessage.ThemeEnum.CREDIT_ISSUED);
             kafkaSender.sendMessage(emailMessage.getTheme(), emailMessage);
+            log.info("Notification of successful loan issuance has been sent.");
         } else {
             emailMessage.setTheme(EmailMessage.ThemeEnum.APPLICATION_DENIED);
             kafkaSender.sendMessage(emailMessage.getTheme(), emailMessage);
 
             throw new IllegalArgumentException();
         }
+    }
+
+    public Application getApplicationById(Long applicationId) {
+        return applicationRepository.findById(applicationId)
+                .orElseThrow(() -> new EntityNotFoundException("Application with id = "+ applicationId +" not found."));
     }
 }

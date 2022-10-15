@@ -1,5 +1,7 @@
 package com.deyeva.dossier.email;
 
+import com.deyeva.dossier.model.Application;
+import com.deyeva.dossier.tempFile.TempFileCreator;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Component;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
+import java.util.List;
 
 @Component
 @AllArgsConstructor
@@ -19,9 +22,10 @@ import java.io.File;
 public class EmailServiceImpl{
 
     private final JavaMailSender javaMailSender;
+    private final TempFileCreator tempFileCreator;
 
     public void sendSimpleMessage(String to, String subject, String text) {
-        System.out.println("Send simple Message");
+        log.info("Send simple Message");
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("deyevat@yandex.ru");
@@ -31,14 +35,16 @@ public class EmailServiceImpl{
 
         try {
             javaMailSender.send(message);
-            System.out.println("Message sent");
+            log.info("Message sent");
         } catch (ListenerExecutionFailedException e) {
-            System.out.println(e.getMessage());
+            log.debug(e.getMessage());
         }
     }
 
-    public void sendMessageWithAttachment(String to, String subject, String text, String pathToAttachment) {
-        System.out.println("Send Message with Attachment");
+    public void sendMessageWithAttachment(String to, String subject, String text, Application application) {
+        log.info("Send Message with Attachment");
+
+        List<String> result = tempFileCreator.createTempFile(application.getCredit(), application.getClient());
 
         MimeMessage message = javaMailSender.createMimeMessage();
 
@@ -50,10 +56,15 @@ public class EmailServiceImpl{
             helper.setSubject(subject);
             helper.setText(text);
 
-            FileSystemResource file = new FileSystemResource(new File(pathToAttachment));
-            helper.addAttachment("Document", file);
+            FileSystemResource creditContract = new FileSystemResource(new File(result.get(0)));
+            FileSystemResource creditApplication = new FileSystemResource(new File(result.get(1)));
+            FileSystemResource paymentSchedule = new FileSystemResource(new File(result.get(2)));
+            helper.addAttachment("CreditContract.txt", creditContract);
+            helper.addAttachment("CreditApplication.txt", creditApplication);
+            helper.addAttachment("PaymentSchedule.txt", paymentSchedule);
+
         } catch (MessagingException e) {
-            System.out.println(e.getMessage());
+            log.debug(e.getMessage());
         }
 
         javaMailSender.send(message);

@@ -1,6 +1,6 @@
 package com.deyeva.dossier.feign;
 
-import com.deyeva.dossier.model.entity.Application;
+import com.deyeva.dossier.model.Application;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -28,3 +28,24 @@ msa:
   services:
     deal:
       url: http://localhost:8081
+
+  message:
+    log: "Received Message in group dossier for credit-issued topic: : "
+    finish-registration:
+      subject: "Finish registration"
+      text: "Registration of the application is over. Complete the loan processing by the link: http://localhost:8081/swagger-ui/index.html#/deal/calculatedLoanParameters. Your application id = "
+    create-documents:
+      subject: "Documents created"
+      text: "The loan is calculated. Please proceed to the documents processing by the link: http://localhost:8081/swagger-ui/index.html#/deal/toSendDocuments."
+    send-documents:
+      subject: "Documents"
+      text: "The documents are formed. Please follow the link to sign: http://localhost:8081/swagger-ui/index.html#/deal/toSignDocuments."
+    send-ses:
+      subject: "Ses"
+      text: "If you are satisfied with the conditions, please follow the link to confirm: http://localhost:8081/swagger-ui/index.html#/deal/toSendCode. Your personal code: "
+    credit-issued:
+      subject: "Credit issued"
+      text: "Congratulations, the loan has been issued. You can check the balance in your personal account."
+    application-denied:
+      subject: "Application denied"
+      text: "Unfortunately, your application has been refused."
