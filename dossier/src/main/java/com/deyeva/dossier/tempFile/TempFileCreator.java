@@ -2,7 +2,7 @@ package com.deyeva.dossier.tempFile;
 
 import com.deyeva.dossier.model.Client;
 import com.deyeva.dossier.model.Credit;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class TempFileCreator {
 
@@ -65,7 +65,7 @@ public class TempFileCreator {
 
         } catch (IOException e) {
             log.debug(e.getMessage());
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
     }
 }

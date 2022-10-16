@@ -9,7 +9,7 @@ import com.deyeva.deal.model.entity.Credit;
 import com.deyeva.deal.repository.ApplicationRepository;
 import com.deyeva.deal.repository.ClientRepository;
 import com.deyeva.deal.repository.CreditRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class DealService {
     private final ApplicationRepository applicationRepository;
@@ -29,8 +29,8 @@ public class DealService {
     private final CreditConveyorClient creditConveyorClient;
     private final KafkaSender kafkaSender;
 
-    private final int MIN_INT_FOR_RANDOM_NUMBER = 999;
-    private final int MAX_INT_FOR_RANDOM_NUMBER = 9999;
+    private static int MIN_INT_FOR_RANDOM_NUMBER = 999;
+    private static int MAX_INT_FOR_RANDOM_NUMBER = 9999;
 
     public List<LoanOfferDTO> getListOfPossibleLoanOffers(LoanApplicationRequestDTO loanApplicationRequestDTO) {
         Client client = new Client();
@@ -67,7 +67,7 @@ public class DealService {
         
         try {
             loanOffers = creditConveyorClient.getOffers(loanApplicationRequestDTO);
-            log.info("Possible loan terms are calculated.");
+            log.info("Possible loan terms for applicationId: "+application.getId()+" are calculated: " + loanOffers);
         } catch (RuntimeException e) {
             EmailMessage emailMessage = new EmailMessage();
             emailMessage.setApplicationId(application.getId());
@@ -97,7 +97,7 @@ public class DealService {
         if (statusHistory.contains(ApplicationStatus.PREAPPROVAL)){
             statusHistory.add(applicationStatusHistoryDTO);
         } else {
-            log.info("The transition to this status is incorrect.");
+            log.info("The transition to status "+ApplicationStatus.APPROVED+" is incorrect.");
         }
 
 
@@ -112,7 +112,7 @@ public class DealService {
         emailMessage.setAddress(application.getClient().getEmail());
 
         kafkaSender.sendMessage(emailMessage.getTheme(), emailMessage);
-        log.info("Application saved in database.");
+        log.info("Application with id = "+application.getId()+" saved in database.");
 
         applicationRepository.save(application);
     }
@@ -141,7 +141,7 @@ public class DealService {
                 .isSalaryClient(application.getAppliedOffer().getIsSalaryClient());
 
         CreditDTO creditDTO = creditConveyorClient.getLoanOffer(scoringDataDTO);
-        log.info("The loan is calculated.");
+        log.info("The loan for applicationId = "+application.getId()+" is calculated: "+creditDTO);
 
         Credit credit = new Credit();
         credit.setAmount(creditDTO.getAmount());
@@ -166,7 +166,7 @@ public class DealService {
         if (statusHistory.contains(ApplicationStatus.APPROVED)){
             statusHistory.add(applicationStatusHistoryDTO);
         } else {
-            log.info("The transition to this status is incorrect.");
+            log.info("The transition to status"+ApplicationStatus.CC_APPROVED+" is incorrect.");
         }
 
         Employment employment = new Employment();
@@ -213,7 +213,7 @@ public class DealService {
         if (statusHistory.contains(ApplicationStatus.CC_APPROVED)){
             application.setStatusHistory(statusHistory);
         } else {
-            log.info("The transition to this status is incorrect.");
+            log.info("The transition to status"+ApplicationStatus.PREPARE_DOCUMENTS+" is incorrect.");
         }
 
         application.setStatus(ApplicationStatus.PREAPPROVAL);
@@ -226,7 +226,7 @@ public class DealService {
         emailMessage.setAddress(application.getClient().getEmail());
 
         kafkaSender.sendMessage(emailMessage.getTheme(), emailMessage);
-        log.info("Notification for filling in the data has been sent.");
+        log.info("Notification for filling in the data for applicationId = "+application.getId()+" has been sent.");
 
         ApplicationStatusHistoryDTO applicationStatusHistoryDTOSecond = new ApplicationStatusHistoryDTO();
         applicationStatusHistoryDTOSecond.setStatus(ApplicationStatus.DOCUMENT_CREATED);
@@ -239,7 +239,7 @@ public class DealService {
         if (statusHistorySecond.contains(ApplicationStatus.PREPARE_DOCUMENTS)) {
             application.setStatusHistory(statusHistorySecond);
         } else {
-            log.info("The transition to this status is incorrect.");
+            log.info("The transition to status "+ApplicationStatus.DOCUMENT_CREATED+" is incorrect.");
         }
 
         application.setStatus(ApplicationStatus.DOCUMENT_CREATED);
@@ -255,7 +255,7 @@ public class DealService {
         emailMessage.setAddress(application.getClient().getEmail());
 
         kafkaSender.sendMessage(emailMessage.getTheme(), emailMessage);
-        log.info("The notification for signing the documents has been sent.");
+        log.info("The notification for signing the documents for applicationId = "+application.getId()+" has been sent.");
     }
 
     public void toSendCode(Long applicationId, String code) {
@@ -278,14 +278,14 @@ public class DealService {
             if (statusHistory.contains(ApplicationStatus.DOCUMENT_CREATED)){
                 application.setStatusHistory(statusHistory);
             } else {
-                log.info("The transition to this status is incorrect.");
+                log.info("The transition to status"+ApplicationStatus.DOCUMENT_SIGNED+" is incorrect.");
             }
 
             application.setStatus(ApplicationStatus.DOCUMENT_SIGNED);
 
             emailMessage.setTheme(EmailMessage.ThemeEnum.CREDIT_ISSUED);
             kafkaSender.sendMessage(emailMessage.getTheme(), emailMessage);
-            log.info("Notification of successful loan issuance has been sent.");
+            log.info("Notification of successful loan issuance for applicationId = "+application.getId()+" has been sent.");
         } else {
             emailMessage.setTheme(EmailMessage.ThemeEnum.APPLICATION_DENIED);
             kafkaSender.sendMessage(emailMessage.getTheme(), emailMessage);

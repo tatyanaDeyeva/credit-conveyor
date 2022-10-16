@@ -2,7 +2,7 @@ package com.deyeva.dossier.email;
 
 import com.deyeva.dossier.model.Application;
 import com.deyeva.dossier.tempFile.TempFileCreator;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.kafka.listener.ListenerExecutionFailedException;
@@ -17,7 +17,7 @@ import java.io.File;
 import java.util.List;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class EmailServiceImpl{
 

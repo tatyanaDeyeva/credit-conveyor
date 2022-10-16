@@ -4,14 +4,14 @@ import com.deyeva.application.api.ApplicationApi;
 import com.deyeva.application.model.LoanApplicationRequestDTO;
 import com.deyeva.application.model.LoanOfferDTO;
 import com.deyeva.application.service.ApplicationService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ApplicationController implements ApplicationApi {
 
     private final ApplicationService applicationService;

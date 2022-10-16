@@ -8,7 +8,7 @@ import com.deyeva.deal.model.LoanApplicationRequestDTO;
 import com.deyeva.deal.model.LoanOfferDTO;
 import com.deyeva.deal.model.entity.Application;
 import com.deyeva.deal.service.DealService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class DealController implements DealApi {
 
     private final DealService dealService;

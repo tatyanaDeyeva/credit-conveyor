@@ -114,7 +114,7 @@ public class KafkaDealListener {
             emailMessage = objectMapper.readValue(message, EmailMessage.class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
-            log.info("Can not processing JSON.");
+            log.info("Can not processing JSON: " + message);
         }
 
         return emailMessage;

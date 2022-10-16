@@ -4,7 +4,7 @@ import com.deyeva.application.exception.RefusalException;
 import com.deyeva.application.feign.DealClient;
 import com.deyeva.application.model.LoanApplicationRequestDTO;
 import com.deyeva.application.model.LoanOfferDTO;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ApplicationService {
 
     private final DealClient dealClient;
