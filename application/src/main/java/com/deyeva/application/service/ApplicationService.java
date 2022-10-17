@@ -4,6 +4,7 @@ import com.deyeva.application.exception.RefusalException;
 import com.deyeva.application.feign.DealClient;
 import com.deyeva.application.model.LoanApplicationRequestDTO;
 import com.deyeva.application.model.LoanOfferDTO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 @Service
+@RequiredArgsConstructor
 public class ApplicationService {
 
     private final DealClient dealClient;
@@ -22,10 +24,6 @@ public class ApplicationService {
     private final BigDecimal MIN_AMOUNT = BigDecimal.valueOf(200000);
     private final Integer MIN_TERM = 6;
     private final Integer MIN_AGE = 20;
-
-    public ApplicationService(DealClient dealClient) {
-        this.dealClient = dealClient;
-    }
 
     public List<LoanOfferDTO> getListOfPossibleLoanOffers(LoanApplicationRequestDTO loanApplicationRequestDTO) {
         doPrescoring(loanApplicationRequestDTO);
