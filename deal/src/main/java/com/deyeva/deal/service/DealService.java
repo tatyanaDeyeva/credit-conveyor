@@ -298,4 +298,8 @@ public class DealService {
         return applicationRepository.findById(applicationId)
                 .orElseThrow(() -> new EntityNotFoundException("Application with id = "+ applicationId +" not found."));
     }
+
+    public List<Application> getAllApplications() {
+        return applicationRepository.findAll();
+    }
 }

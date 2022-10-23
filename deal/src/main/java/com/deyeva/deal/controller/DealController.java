@@ -37,11 +37,15 @@ public class DealController implements DealApi {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("deal/application/{applicationId}")
+    @GetMapping("/deal/admin/application/{applicationId}")
     public ResponseEntity<Application> getApplicationById(@PathVariable Long applicationId){
         return ResponseEntity.ok(dealService.getApplicationById(applicationId));
     }
 
+    @GetMapping("/deal/admin/application")
+    public ResponseEntity<List<Application>> getAllApplications(){
+        return ResponseEntity.ok(dealService.getAllApplications());
+    }
 
     public ResponseEntity<Void> toSendMessage(EmailMessage message){   //test api
         kafkaSender.sendMessage(message.getTheme(), message);
