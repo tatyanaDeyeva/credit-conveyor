@@ -75,6 +75,8 @@ public class DealService {
             emailMessage.setAddress(application.getClient().getEmail());
 
             kafkaSender.sendMessage(emailMessage.getTheme(), emailMessage);
+
+            throw new RuntimeException(e);
         }
 
         loanOffers.stream()
