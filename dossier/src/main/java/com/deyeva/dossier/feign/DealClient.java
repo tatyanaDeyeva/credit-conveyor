@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @FeignClient(value = "deal", url = "${msa.services.deal.url}")
 public interface DealClient {
 
-    @RequestMapping(method = RequestMethod.GET, value = "deal/application/{applicationId}")
+    @RequestMapping(method = RequestMethod.GET, value = "/deal/admin/application/{applicationId}")
     Application getApplicationById(@PathVariable String applicationId);
 }

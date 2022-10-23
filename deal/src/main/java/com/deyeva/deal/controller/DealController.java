@@ -37,29 +37,33 @@ public class DealController implements DealApi {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("deal/application/{applicationId}")
+    @GetMapping("/deal/admin/application/{applicationId}")
     public ResponseEntity<Application> getApplicationById(@PathVariable Long applicationId){
         return ResponseEntity.ok(dealService.getApplicationById(applicationId));
     }
 
+    @GetMapping("/deal/admin/application")
+    public ResponseEntity<List<Application>> getAllApplications(){
+        return ResponseEntity.ok(dealService.getAllApplications());
+    }
 
     public ResponseEntity<Void> toSendMessage(EmailMessage message){   //test api
         kafkaSender.sendMessage(message.getTheme(), message);
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Void> toSendDocuments(Long applicationId) {
-        dealService.toSendDocuments(applicationId);
+    public ResponseEntity<Void> sendDocuments(Long applicationId) {
+        dealService.sendDocuments(applicationId);
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Void> toSignDocuments(Long applicationId) {
-        dealService.toSignDocuments(applicationId);
+    public ResponseEntity<Void> signDocuments(Long applicationId) {
+        dealService.signDocuments(applicationId);
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Void> toSendCode(Long applicationId, String code) {
-        dealService.toSendCode(applicationId, code);
+    public ResponseEntity<Void> sendCode(Long applicationId, String code) {
+        dealService.sendCode(applicationId, code);
         return ResponseEntity.ok().build();
     }
 }
