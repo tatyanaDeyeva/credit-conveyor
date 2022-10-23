@@ -1,0 +1,6 @@
+msa:
+  services:
+    application:
+      url: http://localhost:8082
+    deal:
+      url: http://localhost:8081

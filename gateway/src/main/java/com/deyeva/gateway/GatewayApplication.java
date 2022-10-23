@@ -1,4 +1,4 @@
-package com.deyeva.deal;
+package com.deyeva.gateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,10 +6,10 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableFeignClients
-public class DealApplication {
+public class GatewayApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(DealApplication.class, args);
+        SpringApplication.run(GatewayApplication.class, args);
     }
 
 }

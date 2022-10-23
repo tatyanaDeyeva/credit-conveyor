@@ -1,0 +1,7 @@
+server:
+  port: 8082
+
+msa:
+  services:
+    deal:
+      url: http://localhost:8081

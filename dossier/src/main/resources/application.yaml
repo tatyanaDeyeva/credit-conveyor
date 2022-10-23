@@ -1,0 +1,51 @@
+spring:
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: dossier
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+#  mail:
+#    host: smtp.yandex.ru
+#    port: 465
+#    username: deyevat@yandex.ru
+#    password: wxzxtsyxaqfrzmrg
+#    properties:
+#      mail:
+#        smpt:
+#          auth: true
+#          ssl:
+#            enable: true
+#          starttls:
+#            enable: true
+
+server:
+  port: 8083
+
+msa:
+  services:
+    deal:
+      url: http://localhost:8081
+
+  message:
+    log: "Received Message in group dossier for credit-issued topic: : "
+    finish-registration:
+      subject: "Finish registration"
+      text: "Registration of the application is over. Complete the loan processing by the link: http://localhost:8081/swagger-ui/index.html#/deal/calculatedLoanParameters. Your application id = "
+    create-documents:
+      subject: "Documents created"
+      text: "The loan is calculated. Please proceed to the documents processing by the link: http://localhost:8081/swagger-ui/index.html#/deal/sendDocuments."
+    send-documents:
+      subject: "Documents"
+      text: "The documents are formed. Please follow the link to sign: http://localhost:8081/swagger-ui/index.html#/deal/signDocuments."
+    send-ses:
+      subject: "Ses"
+      text: "If you are satisfied with the conditions, please follow the link to confirm: http://localhost:8081/swagger-ui/index.html#/deal/sendCode. Your personal code: "
+    credit-issued:
+      subject: "Credit issued"
+      text: "Congratulations, the loan has been issued. You can check the balance in your personal account."
+    application-denied:
+      subject: "Application denied"
+      text: "Unfortunately, your application has been refused."

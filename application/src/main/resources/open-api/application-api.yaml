@@ -1,0 +1,134 @@
+openapi: "3.0.0"
+info:
+  version: '1'
+  title: Application API
+servers:
+  - url: http://localhost:8082
+
+paths:
+  /application:
+    post:
+      summary: Calculation of possible loan offers
+      operationId: getListOfPossibleLoanOffers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoanApplicationRequestDTO'
+      responses:
+        200:
+          description: Possible loan terms
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LoanOfferDTO'
+  /application/offer:
+    put:
+      summary: Offer selection
+      operationId: choiceLoanOffer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoanOfferDTO'
+      responses:
+        200:
+          description: Offer selected
+
+components:
+  schemas:
+    LoanApplicationRequestDTO:
+      type: object
+      required:
+        - amount
+        - term
+        - firstName
+        - lastName
+        - middleName
+        - email
+        - birthdate
+        - passportSeries
+        - passportNumber
+      properties:
+        amount:
+          type: number
+          format: double
+          example: 700000
+          minimum: 10000
+        term:
+          type: integer
+          example: 60
+          minimum: 6
+        firstName:
+          type: string
+          example: Иван
+          pattern: '[а-яА-Я]{2,30}'
+        lastName:
+          type: string
+          example: Иванов
+          pattern: '[а-яА-Я]{2,30}'
+        middleName:
+          type: string
+          example: Иванович
+          pattern: '[а-яА-Я]{2,30}'
+        email:
+          type: string
+          example: ivanov_86@gmail.com
+          pattern: '[\w\.]{2,50}@[\w\.]{2,20}'
+        birthdate:
+          type: string
+          format: date
+          example: 1986-11-06
+          pattern: '\d{4}-[01]\d{1}-[0123]\d{1}'
+        passportSeries:
+          type: string
+          example: 3619
+          pattern: '\d{4}'
+        passportNumber:
+          type: string
+          example: 725693
+          pattern: '\d{6}'
+
+    LoanOfferDTO:
+      type: object
+      required:
+        - applicationId
+        - requestedAmount
+        - totalAmount
+        - term
+        - monthlyPayment
+        - rate
+        - isInsuranceEnabled
+        - isSalaryClient
+      properties:
+        applicationId:
+          type: integer
+          format: int64
+          example: 1001
+        requestedAmount:
+          type: number
+          format: double
+          example: 700000
+        totalAmount:
+          type: number
+          format: double
+          example: 700000
+        term:
+          type: integer
+          example: 60
+        monthlyPayment:
+          type: number
+          format: double
+          example: 45000
+        rate:
+          type: number
+          format: double
+          example: 12,1
+        isInsuranceEnabled:
+          type: boolean
+          example: false
+        isSalaryClient:
+          type: boolean
+          example: true

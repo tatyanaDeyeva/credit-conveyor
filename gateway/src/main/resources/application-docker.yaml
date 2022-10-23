@@ -1,0 +1,6 @@
+msa:
+  services:
+    application:
+      url: http://application:8080
+    deal:
+      url: http://deal:8080

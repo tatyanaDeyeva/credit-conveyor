@@ -1,0 +1,539 @@
+openapi: "3.0.0"
+info:
+  version: '1'
+  title: Dossier API
+servers:
+  - url: http://localhost:9092
+
+paths:
+  {}
+
+components:
+  schemas:
+    LoanApplicationRequestDTO:
+      type: object
+      required:
+        - amount
+        - term
+        - firstName
+        - lastName
+        - middleName
+        - email
+        - birthdate
+        - passportSeries
+        - passportNumber
+      properties:
+        amount:
+          type: number
+          format: double
+          example: 700000
+          minimum: 10000
+        term:
+          type: integer
+          example: 60
+          minimum: 6
+        firstName:
+          type: string
+          example: Иван
+          pattern: '[а-яА-Я]{2,30}'
+        lastName:
+          type: string
+          example: Иванов
+          pattern: '[а-яА-Я]{2,30}'
+        middleName:
+          type: string
+          example: Иванович
+          pattern: '[а-яА-Я]{2,30}'
+        email:
+          type: string
+          example: ivanov_86@gmail.com
+          pattern: '[\w\.]{2,50}@[\w\.]{2,20}'
+        birthdate:
+          type: string
+          format: date
+          example: 1986-11-06
+          pattern: '\d{4}-[01]\d{1}-[0123]\d{1}'
+        passportSeries:
+          type: string
+          example: 3619
+          pattern: '\d{4}'
+        passportNumber:
+          type: string
+          example: 725693
+          pattern: '\d{6}'
+
+    LoanOfferDTO:
+      type: object
+      required:
+        - applicationId
+        - requestedAmount
+        - totalAmount
+        - term
+        - monthlyPayment
+        - rate
+        - isInsuranceEnabled
+        - isSalaryClient
+      properties:
+        applicationId:
+          type: integer
+          format: int64
+          example: 1001
+        requestedAmount:
+          type: number
+          format: double
+          example: 700000
+        totalAmount:
+          type: number
+          format: double
+          example: 700000
+        term:
+          type: integer
+          example: 60
+        monthlyPayment:
+          type: number
+          format: double
+          example: 45000
+        rate:
+          type: number
+          format: double
+          example: 12,1
+        isInsuranceEnabled:
+          type: boolean
+          example: false
+        isSalaryClient:
+          type: boolean
+          example: true
+
+    ScoringDataDTO:
+      type: object
+      required:
+        - amount
+        - term
+        - firstName
+        - lastName
+        - middleName
+        - gender
+        - birthdate
+        - passportSeries
+        - passportNumber
+        - passportIssueDate
+        - passportIssueBranch
+        - maritalStatus
+        - dependentAmount
+        - employment
+        - account
+        - isInsuranceEnabled
+        - isSalaryClient
+      properties:
+        amount:
+          type: number
+          format: double
+          example: 700000
+        term:
+          type: integer
+          example: 60
+        firstName:
+          type: string
+          example: 'Ivan'
+        lastName:
+          type: string
+          example: 'Ivanov'
+        middleName:
+          type: string
+          example: 'Ivanovich'
+        gender:
+          $ref: '#/components/schemas/Gender'
+        birthdate:
+          type: string
+          format: date
+          example: 1986-11-06
+        passportSeries:
+          type: string
+          example: '3619'
+        passportNumber:
+          type: string
+          example: '725693'
+        passportIssueDate:
+          type: string
+          format: date
+          example: '30.12.2015'
+        passportIssueBranch:
+          type: string
+          example: 'Ленинградская область'
+        maritalStatus:
+          $ref: '#/components/schemas/MaritalStatus'
+        dependentAmount:
+          type: integer
+          example: 100000
+        employment:
+          $ref: '#/components/schemas/EmploymentDTO'
+        account:
+          type: string
+          example: '536263827462'
+        isInsuranceEnabled:
+          type: boolean
+          example: true
+        isSalaryClient:
+          type: boolean
+          example: false
+
+    CreditDTO:
+      type: object
+      required:
+        - amount
+        - term
+        - monthlyPayment
+        - rate
+        - psk
+        - isInsuranceEnabled
+        - isSalaryClient
+        - paymentSchedule
+      properties:
+        amount:
+          type: number
+          format: double
+          example: 700000
+        term:
+          type: integer
+          example: 60
+        monthlyPayment:
+          type: number
+          format: double
+          example: 55000
+        rate:
+          type: number
+          format: double
+          example: 12
+        psk:
+          type: number
+          format: double
+          example: 12.2
+        isInsuranceEnabled:
+          type: boolean
+          example: false
+        isSalaryClient:
+          type: boolean
+          example: true
+        paymentSchedule:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentScheduleElement'
+
+    EmploymentDTO:
+      type: object
+      required:
+        - employmentStatus
+        - employerINN
+        - salary
+        - position
+        - workExperienceTotal
+        - workExperienceCurrent
+      properties:
+        employmentStatus:
+          type: string
+          enum:
+            - 'UNEMPLOYED'
+            - 'SELF_EMPLOYED'
+            - 'EMPLOYED'
+            - 'BUSINESS_OWNER'
+          example: 'EMPLOYED'
+        employerINN:
+          type: string
+          example: '827461927'
+        salary:
+          type: number
+          format: double
+          example: 90000
+        position:
+          type: string
+          enum:
+            - 'WORKER'
+            - 'MID_MANAGER'
+            - 'TOP_MANAGER'
+            - 'OWNER'
+          example: 'WORKER'
+        workExperienceTotal:
+          type: integer
+          example: 18
+        workExperienceCurrent:
+          type: integer
+          example: 6
+
+    PaymentScheduleElement:
+      type: object
+      required:
+        - number
+        - date
+        - totalPayment
+        - interestPayment
+        - debtPayment
+        - remainingDebt
+      properties:
+        number:
+          type: integer
+          example: 1
+        date:
+          type: string
+          format: date
+          example: '15.03.2022'
+        totalPayment:
+          type: number
+          format: double
+          example: 700000
+        interestPayment:
+          type: number
+          format: double
+          example: 30000
+        debtPayment:
+          type: number
+          format: double
+          example: 15000
+        remainingDebt:
+          type: number
+          format: double
+          example: 655000
+
+    FinishRegistrationRequestDTO:
+      type: object
+      required:
+        - gender
+        - maritalStatus
+        - dependentAmount
+        - passportIssueDate
+        - passportIssueBrach
+        - employment
+        - account
+      properties:
+        gender:
+          $ref: '#/components/schemas/Gender'
+        maritalStatus:
+          $ref: '#/components/schemas/MaritalStatus'
+        dependentAmount:
+          type: integer
+          example: 2
+        passportIssueDate:
+          type: string
+          format: date
+          example: 2020-12-07
+        passportIssueBrach:
+          type: string
+          example: '605-234'
+        employment:
+          $ref: '#/components/schemas/EmploymentDTO'
+        account:
+          type: string
+          example: '536263827462'
+
+    EmailMessage:
+      type: object
+      required:
+        - address
+        - theme
+        - applicationId
+      properties:
+        address:
+          type: string
+          example: 'ivanov_93@gmail.com'
+        theme:
+          type: string
+          enum:
+            - FINISH-REGISTRATION
+            - CREATE-DOCUMENTS
+            - SEND-DOCUMENTS
+            - CREDIT-ISSUED
+            - APPLICATION-DENIED
+            - SEND-SES
+          example: SEND-DOCUMENTS
+        applicationId:
+          type: integer
+          format: int64
+          example: 1001
+
+    Gender:
+      type: string
+      enum:
+        - 'MALE'
+        - 'FEMALE'
+        - 'NON_BINARY'
+      example: 'MALE'
+
+    MaritalStatus:
+      type: string
+      enum:
+        - 'MARRIED'
+        - 'DIVORCED'
+        - 'SINGLE'
+        - 'WIDOW_WIDOWER'
+      example: 'MARRIED'
+
+    Passport:
+      type: object
+      required:
+        - series
+        - number
+        - issueDate
+        - issueBranch
+      properties:
+        series:
+          type: string
+        number:
+          type: string
+        issueDate:
+          type: string
+          format: date
+        issueBranch:
+          type: string
+
+    ApplicationStatus:
+      type: string
+      enum:
+        - 'PREAPPROVAL'
+        - 'APPROVED'
+        - 'CC_DENIED'
+        - 'CC_APPROVED'
+        - 'PREPARE_DOCUMENTS'
+        - 'DOCUMENT_CREATED'
+        - 'CLIENT_DENIED'
+        - 'DOCUMENT_SIGNED'
+        - 'CREDIT_ISSUED'
+      example: 'PREPARE_DOCUMENTS'
+
+    ApplicationStatusHistoryDTO:
+      type: object
+      required:
+        - status
+        - time
+        - changeType
+      properties:
+        status:
+          $ref: '#/components/schemas/ApplicationStatus'
+        time:
+          type: string
+          format: date-time
+        changeType:
+          $ref: '#/components/schemas/ApplicationStatus'
+
+    Client:
+      type: object
+      required:
+        - id
+        - lastName
+        - firstName
+        - middleName
+        - birthdate
+        - email
+        - gender
+        - maritalStatus
+        - dependentAmount
+        - passport
+        - employment
+        - account
+      properties:
+        id:
+          type: integer
+          format: int64
+        lastName:
+          type: string
+        firstName:
+          type: string
+        middleName:
+          type: string
+        birthdate:
+          type: string
+          format: date
+        email:
+          type: string
+        gender:
+          $ref: '#/components/schemas/Gender'
+        maritalStatus:
+          $ref: '#/components/schemas/MaritalStatus'
+        dependentAmount:
+          type: integer
+        passport:
+          $ref: '#/components/schemas/Passport'
+        employment:
+          $ref: '#/components/schemas/EmploymentDTO'
+        account:
+          type: string
+
+    Credit:
+      type: object
+      required:
+        - id
+        - amount
+        - term
+        - monthlyPayment
+        - rate
+        - psk
+        - paymentSchedule
+        - isInsuranceEnabled
+        - isSalaryClient
+        - creditStatus
+      properties:
+        id:
+          type: integer
+          format: int64
+        amount:
+          type: number
+          format: double
+        term:
+          type: integer
+        monthlyPayment:
+          type: number
+          format: double
+        rate:
+          type: number
+          format: double
+        psk:
+          type: number
+          format: double
+        paymentSchedule:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentScheduleElement'
+        isInsuranceEnabled:
+          type: boolean
+        isSalaryClient:
+          type: boolean
+        creditStatus:
+          type: object
+          enum:
+            - CALCULATED
+            - ISSUED
+
+    Application:
+      type: object
+      required:
+        - id
+        - client
+        - credit
+        - status
+        - creationDate
+        - appliedOffer
+        - signDate
+        - sesCode
+        - statusHistory
+      properties:
+        id:
+          type: integer
+          format: int64
+        client:
+          $ref: '#/components/schemas/Client'
+        credit:
+          $ref: '#/components/schemas/Credit'
+        status:
+          $ref: '#/components/schemas/ApplicationStatus'
+        creationDate:
+          type: string
+          format: date-time
+        appliedOffer:
+          $ref: '#/components/schemas/LoanOfferDTO'
+        signDate:
+          type: string
+          format: date
+        sesCode:
+          type: string
+        statusHistory:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApplicationStatusHistoryDTO'
