@@ -198,7 +198,7 @@ public class DealService {
         applicationRepository.save(application);
     }
 
-    public void toSendDocuments(Long applicationId) {
+    public void sendDocuments(Long applicationId) {
         Application application = applicationRepository.findById(applicationId)
                 .orElseThrow(() -> new EntityNotFoundException("Application with id = "+ applicationId +" not found."));
 
@@ -245,7 +245,7 @@ public class DealService {
         application.setStatus(ApplicationStatus.DOCUMENT_CREATED);
     }
 
-    public void toSignDocuments(Long applicationId) {
+    public void signDocuments(Long applicationId) {
         Application application = applicationRepository.findById(applicationId)
                 .orElseThrow(() -> new EntityNotFoundException("Application with id = "+ applicationId +" not found."));
 
@@ -258,7 +258,7 @@ public class DealService {
         log.info("The notification for signing the documents for applicationId = "+application.getId()+" has been sent.");
     }
 
-    public void toSendCode(Long applicationId, String code) {
+    public void sendCode(Long applicationId, String code) {
         Application application = applicationRepository.findById(applicationId)
                 .orElseThrow(() -> new EntityNotFoundException("Application with id = "+ applicationId +" not found."));
 

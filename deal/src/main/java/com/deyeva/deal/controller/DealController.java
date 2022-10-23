@@ -52,18 +52,18 @@ public class DealController implements DealApi {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Void> toSendDocuments(Long applicationId) {
-        dealService.toSendDocuments(applicationId);
+    public ResponseEntity<Void> sendDocuments(Long applicationId) {
+        dealService.sendDocuments(applicationId);
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Void> toSignDocuments(Long applicationId) {
-        dealService.toSignDocuments(applicationId);
+    public ResponseEntity<Void> signDocuments(Long applicationId) {
+        dealService.signDocuments(applicationId);
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Void> toSendCode(Long applicationId, String code) {
-        dealService.toSendCode(applicationId, code);
+    public ResponseEntity<Void> sendCode(Long applicationId, String code) {
+        dealService.sendCode(applicationId, code);
         return ResponseEntity.ok().build();
     }
 }

@@ -71,7 +71,7 @@ paths:
       - $ref: '#/components/parameters/ApplicationId'
     post:
       summary: Request to send documents
-      operationId: toSendDocuments
+      operationId: sendDocuments
       tags:
         - document
       responses:
@@ -83,7 +83,7 @@ paths:
       - $ref: '#/components/parameters/ApplicationId'
     post:
       summary: Request to sign documents
-      operationId: toSignDocuments
+      operationId: signDocuments
       tags:
         - document
       responses:
@@ -95,7 +95,7 @@ paths:
       - $ref: '#/components/parameters/ApplicationId'
     post:
       summary: Signing of documents
-      operationId: toSendCode
+      operationId: sendCode
       tags:
         - document
       requestBody:

@@ -13,20 +13,20 @@ public class DocumentController implements DocumentApi {
     private final GatewayService gatewayService;
 
     @Override
-    public ResponseEntity<Void> toSendCode(Long applicationId, String body) {
-        gatewayService.toSendCode(applicationId, body);
+    public ResponseEntity<Void> sendCode(Long applicationId, String body) {
+        gatewayService.sendCode(applicationId, body);
         return ResponseEntity.ok().build();
     }
 
     @Override
-    public ResponseEntity<Void> toSendDocuments(Long applicationId) {
-        gatewayService.toSendDocuments(applicationId);
+    public ResponseEntity<Void> sendDocuments(Long applicationId) {
+        gatewayService.sendDocuments(applicationId);
         return ResponseEntity.ok().build();
     }
 
     @Override
-    public ResponseEntity<Void> toSignDocuments(Long applicationId) {
-        gatewayService.toSignDocuments(applicationId);
+    public ResponseEntity<Void> signDocuments(Long applicationId) {
+        gatewayService.signDocuments(applicationId);
         return ResponseEntity.ok().build();
     }
 }

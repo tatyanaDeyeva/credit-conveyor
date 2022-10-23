@@ -30,16 +30,16 @@ public class GatewayService {
         dealClient.calculatedLoanParameters(String.valueOf(applicationId), finishRegistrationRequestDTO);
     }
 
-    public void toSendDocuments(Long applicationId) {
-        dealClient.toSendDocuments(String.valueOf(applicationId));
+    public void sendDocuments(Long applicationId) {
+        dealClient.sendDocuments(String.valueOf(applicationId));
     }
 
-    public void toSignDocuments(Long applicationId) {
-        dealClient.toSignDocuments(String.valueOf(applicationId));
+    public void signDocuments(Long applicationId) {
+        dealClient.signDocuments(String.valueOf(applicationId));
     }
 
-    public void toSendCode(Long applicationId, String code) {
-        dealClient.toSendCode(String.valueOf(applicationId), code);
+    public void sendCode(Long applicationId, String code) {
+        dealClient.sendCode(String.valueOf(applicationId), code);
     }
 
     public Application getApplicationById(Long applicationId) {

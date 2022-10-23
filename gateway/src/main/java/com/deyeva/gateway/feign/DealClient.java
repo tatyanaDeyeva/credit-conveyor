@@ -23,12 +23,12 @@ public interface DealClient {
     void calculatedLoanParameters(@PathVariable String applicationId, @RequestBody FinishRegistrationRequestDTO finishRegistrationRequestDTO);
 
     @RequestMapping(method = RequestMethod.POST, value = "/deal/document/{applicationId}/send")
-    void toSendDocuments(@PathVariable String applicationId);
+    void sendDocuments(@PathVariable String applicationId);
 
     @RequestMapping(method = RequestMethod.POST, value = "/deal/document/{applicationId}/sign")
-    void toSignDocuments(@PathVariable String applicationId);
+    void signDocuments(@PathVariable String applicationId);
 
     @RequestMapping(method = RequestMethod.POST, value = "/deal/document/{applicationId}/code")
-    void toSendCode(@PathVariable String applicationId, @RequestBody String code);
+    void sendCode(@PathVariable String applicationId, @RequestBody String code);
 
 }
