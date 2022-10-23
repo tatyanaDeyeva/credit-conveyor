@@ -26,6 +26,7 @@ services: #блок описания контейнеров (сервисов)
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=123
       - POSTGRES_DB=deal
+
   credit-conveyor:
     container_name: credit-conveyor
     expose:
@@ -33,6 +34,7 @@ services: #блок описания контейнеров (сервисов)
     ports:
       - "8080:8080"
     build: credit-conveyor
+
   deal:
     container_name: deal
     ports:
@@ -47,6 +49,7 @@ services: #блок описания контейнеров (сервисов)
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=123
       - SPRING_JPA_HIBERNATE_DDL_AUTO=validate
+
   application:
     container_name: application
     ports:
@@ -54,6 +57,7 @@ services: #блок описания контейнеров (сервисов)
     depends_on:
       - deal
     build: application
+
   dossier:
     container_name: dossier
     ports:
@@ -61,6 +65,7 @@ services: #блок описания контейнеров (сервисов)
     depends_on:
       - deal
     build: dossier
+
   gateway:
     container_name: gateway
     ports:
