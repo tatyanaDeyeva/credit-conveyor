@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://deal-db:5432/deal
+    username: postgres
+    password: 123
+
+  kafka:
+    producer:
+      bootstrap-servers: kafka:9092
+
+msa:
+  services:
+    conveyor:
+      url: http://credit-conveyor:8080

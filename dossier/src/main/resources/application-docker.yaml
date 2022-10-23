@@ -1,0 +1,30 @@
+spring:
+  kafka:
+    consumer:
+      bootstrap-servers: kafka:9092
+
+msa:
+  services:
+    deal:
+      url: http://deal:8080
+
+  message:
+    log: "Received Message in group dossier for credit-issued topic: : "
+    finish-registration:
+      subject: "Finish registration"
+      text: "Registration of the application is over. Complete the loan processing by the link: https://deal:8080/swagger-ui/index.html#/deal/calculatedLoanParameters. Your application id = "
+    create-documents:
+      subject: "Documents created"
+      text: "The loan is calculated. Please proceed to the documents processing by the link: https://deal:8080/swagger-ui/index.html#/deal/sendDocuments."
+    send-documents:
+      subject: "Documents"
+      text: "The documents are formed. Please follow the link to sign: https://deal:8080/swagger-ui/index.html#/deal/signDocuments."
+    send-ses:
+      subject: "Ses"
+      text: "If you are satisfied with the conditions, please follow the link to confirm: https://deal:8080/swagger-ui/index.html#/deal/sendCode. Your personal code: "
+    credit-issued:
+      subject: "Credit issued"
+      text: "Congratulations, the loan has been issued. You can check the balance in your personal account."
+    application-denied:
+      subject: "Application denied"
+      text: "Unfortunately, your application has been refused."

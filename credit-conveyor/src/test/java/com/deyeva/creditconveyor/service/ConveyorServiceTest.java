@@ -58,7 +58,7 @@ class ConveyorServiceTest {
                 .requestedAmount(BigDecimal.valueOf(700000))
                 .totalAmount(BigDecimal.valueOf(850000))
                 .term(60)
-                .monthlyPayment(BigDecimal.valueOf(16040.55))
+                .monthlyPayment(BigDecimal.valueOf(16040.56))
                 .rate(BigDecimal.valueOf(5))
                 .isInsuranceEnabled(true)
                 .isSalaryClient(false);
@@ -68,7 +68,7 @@ class ConveyorServiceTest {
                 .requestedAmount(BigDecimal.valueOf(700000))
                 .totalAmount(BigDecimal.valueOf(850000))
                 .term(60)
-                .monthlyPayment(BigDecimal.valueOf(15654.05))
+                .monthlyPayment(BigDecimal.valueOf(15654.06))
                 .rate(BigDecimal.valueOf(4))
                 .isInsuranceEnabled(true)
                 .isSalaryClient(true);
@@ -112,50 +112,50 @@ class ConveyorServiceTest {
 
         PaymentScheduleElement firstPayment = new PaymentScheduleElement()
                 .number(1)
-                .date(LocalDate.parse("2022-10-10"))
-                .totalPayment(BigDecimal.valueOf(143739.8).setScale(2, RoundingMode.CEILING))
+                .date(LocalDate.now().plusMonths(1))
+                .totalPayment(BigDecimal.valueOf(143739.81).setScale(2, RoundingMode.CEILING))
                 .interestPayment(BigDecimal.valueOf(3544.27))
-                .debtPayment(BigDecimal.valueOf(140195.54))
-                .remainingDebt(BigDecimal.valueOf(718699).setScale(2, RoundingMode.CEILING));
+                .debtPayment(BigDecimal.valueOf(140195.55))
+                .remainingDebt(BigDecimal.valueOf(718699.05).setScale(2, RoundingMode.CEILING));
 
         PaymentScheduleElement secondPayment = new PaymentScheduleElement()
                 .number(2)
-                .date(LocalDate.parse("2022-11-10"))
-                .totalPayment(BigDecimal.valueOf(143739.8).setScale(2, RoundingMode.CEILING))
+                .date(LocalDate.now().plusMonths(2))
+                .totalPayment(BigDecimal.valueOf(143739.81).setScale(2, RoundingMode.CEILING))
                 .interestPayment(BigDecimal.valueOf(2953.56))
-                .debtPayment(BigDecimal.valueOf(140786.25))
-                .remainingDebt(BigDecimal.valueOf(574959.2).setScale(2, RoundingMode.CEILING));
+                .debtPayment(BigDecimal.valueOf(140786.26))
+                .remainingDebt(BigDecimal.valueOf(574959.24).setScale(2, RoundingMode.CEILING));
 
         PaymentScheduleElement thirdPayment = new PaymentScheduleElement()
                 .number(3)
-                .date(LocalDate.parse("2022-12-10"))
-                .totalPayment(BigDecimal.valueOf(143739.8).setScale(2, RoundingMode.CEILING))
+                .date(LocalDate.now().plusMonths(3))
+                .totalPayment(BigDecimal.valueOf(143739.81).setScale(2, RoundingMode.CEILING))
                 .interestPayment(BigDecimal.valueOf(2362.85))
-                .debtPayment(BigDecimal.valueOf(141376.96))
-                .remainingDebt(BigDecimal.valueOf(431219.4).setScale(2, RoundingMode.CEILING));
+                .debtPayment(BigDecimal.valueOf(141376.97))
+                .remainingDebt(BigDecimal.valueOf(431219.43).setScale(2, RoundingMode.CEILING));
 
         PaymentScheduleElement fourthPayment = new PaymentScheduleElement()
                 .number(4)
-                .date(LocalDate.parse("2023-01-10"))
-                .totalPayment(BigDecimal.valueOf(143739.8).setScale(2, RoundingMode.CEILING))
+                .date(LocalDate.now().plusMonths(4))
+                .totalPayment(BigDecimal.valueOf(143739.81).setScale(2, RoundingMode.CEILING))
                 .interestPayment(BigDecimal.valueOf(1772.14))
-                .debtPayment(BigDecimal.valueOf(141967.67))
-                .remainingDebt(BigDecimal.valueOf(287479.6).setScale(2, RoundingMode.CEILING));
+                .debtPayment(BigDecimal.valueOf(141967.68))
+                .remainingDebt(BigDecimal.valueOf(287479.62).setScale(2, RoundingMode.CEILING));
 
         PaymentScheduleElement fifthPayment = new PaymentScheduleElement()
                 .number(5)
-                .date(LocalDate.parse("2023-02-10"))
-                .totalPayment(BigDecimal.valueOf(143739.8).setScale(2, RoundingMode.CEILING))
+                .date(LocalDate.now().plusMonths(5))
+                .totalPayment(BigDecimal.valueOf(143739.81).setScale(2, RoundingMode.CEILING))
                 .interestPayment(BigDecimal.valueOf(1181.43))
-                .debtPayment(BigDecimal.valueOf(142558.38))
-                .remainingDebt(BigDecimal.valueOf(143739.8).setScale(2, RoundingMode.CEILING));
+                .debtPayment(BigDecimal.valueOf(142558.39))
+                .remainingDebt(BigDecimal.valueOf(143739.81).setScale(2, RoundingMode.CEILING));
 
         PaymentScheduleElement sixthPayment = new PaymentScheduleElement()
                 .number(6)
-                .date(LocalDate.parse("2023-03-10"))
-                .totalPayment(BigDecimal.valueOf(143739.8).setScale(2, RoundingMode.CEILING))
+                .date(LocalDate.now().plusMonths(6))
+                .totalPayment(BigDecimal.valueOf(143739.81).setScale(2, RoundingMode.CEILING))
                 .interestPayment(BigDecimal.valueOf(590.72))
-                .debtPayment(BigDecimal.valueOf(143149.09))
+                .debtPayment(BigDecimal.valueOf(143149.10).setScale(2, RoundingMode.CEILING))
                 .remainingDebt(BigDecimal.valueOf(0).setScale(2, RoundingMode.CEILING));
 
         List<PaymentScheduleElement> paymentScheduleElements= new ArrayList<>();
@@ -170,7 +170,7 @@ class ConveyorServiceTest {
         CreditDTO expected = new CreditDTO()
                 .amount(BigDecimal.valueOf(700000))
                 .term(6)
-                .monthlyPayment(BigDecimal.valueOf(143739.8).setScale(2, RoundingMode.CEILING))
+                .monthlyPayment(BigDecimal.valueOf(143739.81).setScale(2, RoundingMode.CEILING))
                 .rate(BigDecimal.valueOf(5))
                 .psk(BigDecimal.valueOf(38.221))
                 .isInsuranceEnabled(true)
