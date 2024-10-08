@@ -1,0 +1,12 @@
+apiVersion: v1 #версия api с которой работает данный объект
+kind: Pod #название объекта(тип)
+metadata:
+    name: my-pod-2 #имя объекта
+    labels:
+      app: credit-conveyor
+spec: #описываем под
+    containers:
+        -  image: alxdv/credit-conveyor_conveyor:1.0.4 #имя образа
+           name: conveyor #присваиваем имя контейнеру
+           ports:
+             -  containerPort: 8080 #порт, поторый будет слушать контейнер

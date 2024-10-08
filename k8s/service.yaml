@@ -1,0 +1,12 @@
+apiVersion: apps/v1 #версия api с которой работает данный объект
+kind: Service #название объекта(тип)
+metadata:
+  name: credit-conveyor-service #имя объекта
+spec:
+  selector:
+     type: NodePort #предоставление доступа к статическому порту на каждом узле
+     app: credit-conveyor
+  ports:
+    - port: 8080 #порт, открытый внутри кластера
+      targetPort: 8080 #порт контейнера, на который отправляются запросы
+      nodePort: 30010 #статический порт, назначенный для каждого узла

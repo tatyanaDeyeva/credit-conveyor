@@ -1,0 +1,19 @@
+apiVersion: apps/v1 #версия api с которой работает данный объект
+kind: Deployment #название объекта(тип)
+metadata:
+  name: credit-conveyor #имя объекта
+spec:
+  selector:
+    matchLabels:
+      app: credit-conveyor #определяем, какими подами управлять
+  replicas: 2 #количество экземпляров пода
+  template:
+    metadata:
+      labels:
+        app: credit-conveyor #маркируем модуль
+    spec: #описание шаблона пода
+      containers:
+      - name: credit-conveyor #присваиваем имя контейнеру
+        image: deyeva/credit-conveyor_conveyor:1.0.4 #имя образа
+        ports:
+        - containerPort: 8080 #порт, поторый будет слушать контейнер

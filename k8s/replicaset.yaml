@@ -1,0 +1,19 @@
+apiVersion: apps/v1 #версия api с которой работает данный объект
+kind: ReplicaSet #название объекта(тип). управляет количеством подов
+metadata:
+    name: my-replicaset #имя объекта
+spec:
+    replicas: 3 #количество экземпляров подов
+    selector:
+        matchLabels:
+            app: my-app #определяем, какими подами управлять
+    template:
+        metadata:
+            labels:
+                app: my-app #маркируем модуль
+        spec:
+            containers:
+                -  image: alxdv/credit-conveyor_conveyor:1.0.4 #имя образа
+                   name: conveyor #присваиваем имя контейнеру
+                   ports:
+                       -  containerPort: 8080 #порт, поторый будет слушать контейнер
